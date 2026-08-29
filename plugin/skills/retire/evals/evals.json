@@ -1,0 +1,43 @@
+{
+  "skill_name": "retire",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "cotesy retire .claude/plans/mvp --to .",
+      "expected_output": "Confirms the source scope's WAL is fully drained, spawns the cotesy-retirer agent with source and target scope paths, surfaces its migration summary, then asks the user whether to delete the source scope before running git rm -r on it",
+      "files": [".claude/plans/mvp/.cotesy/wal.md", ".claude/plans/mvp/docs/ARCHITECTURE.md", "docs/ARCHITECTURE.md"],
+      "expectations": [
+        "Reads the source scope's .cotesy/wal.md before spawning the agent",
+        "Spawns the cotesy-retirer agent passing both the source and --to target scope paths, not summarized content",
+        "Does not itself edit the target scope's docs directly (only the retirer agent does)",
+        "Asks the user for confirmation before deleting the source scope",
+        "Uses 'git rm -r' (not plain rm) to delete the source scope only after confirmation",
+        "Does not run git commit"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "cotesy retire .claude/plans/mvp --to . (source scope's WAL has 2 pending unsynced entries)",
+      "expected_output": "Detects the pending WAL entries and stops, telling the user to run cotesy:sync on the source scope first, without spawning the retirer agent or deleting anything",
+      "files": [".claude/plans/mvp/.cotesy/wal.md"],
+      "expectations": [
+        "Detects the source scope's WAL has pending '## ' entries",
+        "Does NOT spawn the cotesy-retirer agent",
+        "Error/response tells the user to run cotesy:sync on the source scope first",
+        "Does not modify or delete any files"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "cotesy retire some/folder-without-cotesy --to .",
+      "expected_output": "Errors clearly that the source scope has no .cotesy/ directory, suggests cotesy:init, and does not spawn the agent or delete anything",
+      "files": [],
+      "expectations": [
+        "Error message names the source scope as missing .cotesy/",
+        "Suggests running cotesy:init",
+        "Does not spawn the cotesy-retirer agent",
+        "Does not delete or modify any files"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "skill_name": "tidy",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "cotesy tidy — the scope's CLAUDE.md references a script that was deleted last week, and the same convention is stated almost identically in both CLAUDE.md and docs/ARCHITECTURE.md",
+      "expected_output": "Spawns the cotesy-groundskeeper agent with the scope path and shared reference path, which removes the stale entry (verified via Grep/Glob that the script no longer exists) and merges the duplicate convention into one target, with no new content added",
+      "files": ["CLAUDE.md", "docs/ARCHITECTURE.md", ".cotesy/index.md"],
+      "expectations": [
+        "Spawns the cotesy-groundskeeper agent, not cotesy-curator or cotesy-retirer",
+        "Does not read or reference .cotesy/wal.md at any point",
+        "Resulting plan only contains REMOVE/UPDATE/RELOCATE actions, never ADD",
+        "Stale entry referencing the deleted script is removed",
+        "Duplicate convention is merged into a single target, not left in both",
+        "Does not run git commit or git add"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "cotesy tidy on a scope whose docs are already clean and well-organized",
+      "expected_output": "Spawns the groundskeeper, which audits everything, finds nothing to fix, and reports the docs are already clean without making any edits",
+      "files": ["docs/ARCHITECTURE.md"],
+      "expectations": [
+        "Spawns the cotesy-groundskeeper agent",
+        "Reports that the docs are already clean / no changes needed",
+        "Does not modify any files",
+        "Does not read .cotesy/wal.md"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "cotesy tidy in a folder with no .cotesy/ anywhere in its ancestry",
+      "expected_output": "Errors clearly that no .cotesy/ scope was found and suggests running cotesy:init, without spawning the groundskeeper agent",
+      "files": [],
+      "expectations": [
+        "Does not spawn the cotesy-groundskeeper agent",
+        "Error message mentions no .cotesy/ scope was found",
+        "Error message suggests running cotesy:init"
+      ]
+    }
+  ]
+}

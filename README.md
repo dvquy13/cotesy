@@ -12,6 +12,13 @@ Decouples **capture** from **curation** for project knowledge bases.
   auto-commits — changes are left unstaged for human review via `git diff`.
 - `cotesy:init [path]` — scaffold a `.cotesy/` scope (default: cwd), seeding
   `docs/ARCHITECTURE.md` if absent.
+- `cotesy:retire <scope> --to <ancestor>` — one-time distillation: fold a
+  scope's docs into an ancestor scope's docs, then (with confirmation)
+  delete the retired scope. For decommissioning a scope entirely (e.g. a
+  completed plan folder), not routine curation.
+- `cotesy:tidy [path]` — housekeeping-only pass: dedup, remove stale
+  entries, resolve contradictions, fix misplaced content in a scope's
+  existing docs. Never reads the WAL and never adds anything new.
 
 A "scope" is any folder with its own `.cotesy/` — not just repo root. Use
 `cotesy:append --to <ancestor>` to promote a finding from a nested scope up to
@@ -34,5 +41,8 @@ Registered via `~/.claude/settings.json`:
 plugin/
   .claude-plugin/plugin.json
   agents/curator.md
-  skills/{init,append,sync}/SKILL.md (+ evals/evals.json)
+  agents/retirer.md
+  agents/groundskeeper.md
+  shared/placement-scope.md
+  skills/{init,append,sync,retire,tidy}/SKILL.md (+ evals/evals.json)
 ```

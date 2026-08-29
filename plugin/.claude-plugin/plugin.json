@@ -5,6 +5,8 @@
   "skills": [
     "./skills/init",
     "./skills/append",
-    "./skills/sync"
+    "./skills/sync",
+    "./skills/retire",
+    "./skills/tidy"
   ]
 }

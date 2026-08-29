@@ -24,10 +24,13 @@ anything to do, and spawn the agent.
 2. **Check for pending work**: read `<scope>/.cotesy/wal.md`. If it contains
    only the schema-header comment (no `## ` entries), tell the user there's
    nothing to sync and **stop** — do not spawn the curator agent.
-3. **Spawn the curator**: invoke the `cotesy-curator` agent, passing only the
-   resolved `<scope>` absolute path. Do not pass along conversation context,
-   summaries, or findings yourself — the agent must derive everything from
-   reading the scope's own files, per its no-conversation-memory contract.
+3. **Spawn the curator**: invoke the `cotesy-curator` agent, passing the
+   resolved `<scope>` absolute path plus the absolute path to this skill's
+   `../../shared/placement-scope.md` (resolved relative to this skill's own
+   base directory). Do not pass along conversation context, summaries, or
+   findings yourself — the agent must derive everything from reading the
+   scope's own files and that shared reference, per its
+   no-conversation-memory contract.
 4. **Surface the agent's summary** to the user verbatim (counts of
    added/updated/removed/relocated entries, which doc targets changed).
 5. **Remind the user**: the changes are unstaged — review with `git diff`
