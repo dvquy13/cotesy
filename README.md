@@ -61,3 +61,5 @@ plugin/
   shared/placement-scope.md
   skills/{init,append,sync,retire,tidy}/SKILL.md (+ evals/evals.json)
 ```
+
+<!-- release-please verification -->
