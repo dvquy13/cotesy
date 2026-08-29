@@ -32,16 +32,18 @@ you're done, once it confirms with the human.
 ## Phase 1: Read state
 
 1. Read the shared reference (path given in your invocation).
-2. Read `<source>/docs/ARCHITECTURE.md`, `<source>/CLAUDE.md`, each file
-   under `<source>/.claude/rules/`, and any other markdown file sitting
-   directly in `<source>`'s root (e.g. a plan or reference file), if present.
+2. Read `<source>/docs/ARCHITECTURE.md`, every other `<source>/docs/<topic>.md`
+   file, `<source>/CLAUDE.md`, each file under `<source>/.claude/rules/`, and
+   any other markdown file sitting directly in `<source>`'s root (e.g. a
+   plan or reference file), if present.
 3. Read `<source>/.cotesy/wal.md`. If it contains any `## ` entries (not
    fully drained), **stop and report an error**: the caller should run
    `cotesy:sync <source>` first so no pending findings are lost — do not
    proceed to Phase 2.
-4. Read `<target>/docs/ARCHITECTURE.md`, `<target>/CLAUDE.md`, each file
-   under `<target>/.claude/rules/`, and `<target>/.cotesy/index.md`, if they
-   exist.
+4. Read `<target>/docs/ARCHITECTURE.md`, every other `<target>/docs/<topic>.md`
+   file, `<target>/CLAUDE.md`, each file under `<target>/.claude/rules/`,
+   `<target>/README.md` (per the shared reference's "Read README.md before
+   writing" rule), and `<target>/.cotesy/index.md`, if they exist.
 5. If `git status` on `<target>`'s doc targets shows unrelated dirty changes
    (not from this run), note it in your summary — you never commit, but flag
    it so the human reviewing the diff knows which changes are theirs.
@@ -60,8 +62,8 @@ contradict what's already there.
 
 **Dedup incoming findings against each other first**, before touching docs.
 
-Route every finding via the shared reference's Placement Scope, into
-`<target>` only.
+Route every finding via the shared reference's Doc Targets and Topic
+graduation rules, into `<target>` only.
 
 ## Phase 3: Plan + dedup
 
@@ -70,13 +72,13 @@ and every tagged existing `<target>` entry.
 
 ## Phase 4: Execute
 
-1. Apply the finalized plan to `<target>`'s doc targets only. Create `docs/`
-   or `.claude/rules/` dirs under `<target>` if needed.
+1. Apply the finalized plan to `<target>`'s doc targets only, including
+   creating a new `docs/<topic>.md` for any topic that graduates per the
+   shared reference. Create `docs/` or `.claude/rules/` dirs under `<target>`
+   if needed.
 2. Merge into existing sections by topic, not chronologically.
-3. Regenerate `<target>/.cotesy/index.md` (topic → file → one-liner table),
-   including a row per doc target plus any other markdown file sitting
-   directly in `<target>`'s root not already covered — same convention
-   `cotesy:init`/`cotesy-curator` use.
+3. Regenerate `<target>/.cotesy/index.md` per the shared reference's Index
+   generation convention.
 4. **Do not touch anything under `<source>`** — no reads-then-writes, no
    truncation, no deletion. That is entirely out of scope for you.
 5. **Do not run `git commit` or `git add`.** `Bash(git *)` is for read-only

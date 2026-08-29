@@ -32,44 +32,44 @@ Initialize a cotesy-tracked scope: a folder (default cwd) that gets its own
    **Source:** <scope-relative-path>   (only present when promoted via --to)
    -->
    ```
-4. **Condensed first-pass audit of `<scope>`** (same spirit as `project-docs`
+4. **Read `../../shared/placement-scope.md`** (resolved relative to this
+   skill's own base directory) — it defines the `docs/ARCHITECTURE.md`
+   skeleton's purpose (Doc Targets section) and the index-generation
+   convention (Index generation section) used below.
+5. **Condensed first-pass audit of `<scope>`** (same spirit as `project-docs`
    Phase 1 full audit, scoped to this folder only):
    - Check whether `<scope>/CLAUDE.md`, `<scope>/docs/ARCHITECTURE.md`, and
      `<scope>/.claude/rules/` exist.
    - If `<scope>/docs/ARCHITECTURE.md` does **not** exist, seed it with the
      skeleton (do not invent content — leave sections empty except a one-line
-     description if inferable from a README or package manifest in scope):
+     description if inferable from a README or package manifest in scope).
+     Per the shared reference, this file stays a short index — components as
+     one-liners, not deep content:
      ```markdown
      # <scope name>
      > One-line description
-     ## Structure
-     ## Key Concepts
-     ## Entry Points
+     ## Components
      ## Data Flow
      ## Decisions
-     ## Gotchas
      ## Dependencies
      ```
    - Scan `<scope>` root and key subdirs (one level of `ls`/`Glob`), config
      files (`package.json`, `Cargo.toml`, `pyproject.toml`, etc.), and obvious
-     entry points, to fill in `Structure`/`Entry Points` if evident. Skip
-     anything not directly observable — no speculation.
-5. **Generate `<scope>/.cotesy/index.md`** from whatever docs exist or were
-   just seeded, as a table:
+     entry points, to fill in `Components` if evident (one line per
+     component/feature found — no `docs/<topic>.md` files exist yet at init
+     time, so nothing to link to). Skip anything not directly observable —
+     no speculation.
+6. **Generate `<scope>/.cotesy/index.md`** per the shared reference's Index
+   generation convention, from whatever docs exist or were just seeded:
    ```markdown
    # cotesy index — <scope>
    | Topic | File | Summary |
    |---|---|---|
    | Architecture | docs/ARCHITECTURE.md | <one-liner> |
    ```
-   Include a row per doc target that exists in scope (`CLAUDE.md`,
-   `docs/ARCHITECTURE.md`, each file under `.claude/rules/`). Also include a
-   row for any other markdown file sitting directly in scope root (e.g. a
-   plan or reference file this scope was pointed at) that isn't already
-   covered — one-liner summary taken from its first heading or first
-   non-blank line. If nothing exists yet beyond the just-seeded
-   `ARCHITECTURE.md`, the table has one row.
-6. **Report**: list exactly what was created (`.cotesy/wal.md`,
+   If nothing exists yet beyond the just-seeded `ARCHITECTURE.md`, the table
+   has one row.
+7. **Report**: list exactly what was created (`.cotesy/wal.md`,
    `.cotesy/index.md`, and `docs/ARCHITECTURE.md` if seeded), and remind the
    user these are plain files meant to be committed.
 

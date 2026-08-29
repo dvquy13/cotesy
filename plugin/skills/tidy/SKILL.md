@@ -4,7 +4,9 @@ description: >
   Housekeeping-only pass over a scope's existing docs — dedup, remove stale
   entries, resolve contradictions, fix misplaced content — without
   consuming any new knowledge. Use when the user wants to "clean up docs",
-  "dedupe", "audit existing docs", or tidy a scope without adding anything.
+  "dedupe", "audit existing docs", tidy a scope without adding anything, or
+  just upgraded the cotesy plugin and wants existing docs re-audited against
+  the current placement rules.
 allowed-tools: Read, Agent, Bash(git *)
 argument-hint: "[path]"
 ---
@@ -42,3 +44,9 @@ already there.
 - Unlike `cotesy:sync`, there's no "nothing to do" WAL check up front — the
   groundskeeper always does the audit and simply reports if it found nothing
   to fix.
+- **Run this after upgrading the cotesy plugin.** Plugin updates (e.g. a
+  changed `plugin/shared/placement-scope.md` routing rule) never touch a
+  downstream scope's docs by themselves — `cotesy:sync` only re-audits when
+  it has WAL entries to drain, so a scope with an empty WAL won't pick up a
+  rules change on its own. `cotesy:tidy` is the reliable way to re-apply
+  current rules to docs written under an older version.

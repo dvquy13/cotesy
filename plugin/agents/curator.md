@@ -41,10 +41,13 @@ schema-header comment.
 1. Read the shared reference (path given in your invocation).
 2. Read `<scope>/.cotesy/wal.md` — parse every entry.
 3. Read `<scope>/docs/ARCHITECTURE.md` if it exists.
-4. Read `<scope>/CLAUDE.md` if it exists.
-5. List `<scope>/.claude/rules/` and read existing rule files, if any.
-6. Read `<scope>/.cotesy/index.md` if it exists.
-7. If `git status` on `<scope>`'s doc targets shows unrelated dirty changes
+4. List `<scope>/docs/` and read every other `docs/<topic>.md` file present.
+5. Read `<scope>/CLAUDE.md` if it exists.
+6. List `<scope>/.claude/rules/` and read existing rule files, if any.
+7. Read `<scope>/.cotesy/index.md` if it exists.
+8. Read `<scope>/README.md` if it exists, per the shared reference's "Read
+   README.md before writing" rule.
+9. If `git status` on `<scope>`'s doc targets shows unrelated dirty changes
    (not from this run), note it — you may still proceed since you never
    commit, but flag it in your summary so the human reviewing the diff knows
    which changes are theirs vs. yours.
@@ -62,10 +65,11 @@ findings — using the shared reference's Audit Criteria & Tags exactly.
 **Dedup new WAL entries against each other first**, before touching docs —
 multiple appends about the same fact should collapse into one doc update.
 
-Route every finding via the shared reference's Placement Scope. If a WAL
-entry carries a `**Source:**` line (promoted from a descendant scope), route
-and place it exactly as any other entry — the `Source` line is provenance
-metadata for the reader, not a placement instruction.
+Route every finding via the shared reference's Doc Targets and Topic
+graduation rules. If a WAL entry carries a `**Source:**` line (promoted from
+a descendant scope), route and place it exactly as any other entry — the
+`Source` line is provenance metadata for the reader, not a placement
+instruction.
 
 ## Phase 3: Plan + dedup
 
@@ -74,14 +78,13 @@ every tagged existing entry.
 
 ## Phase 4: Execute
 
-1. Apply the finalized plan — write/edit/remove entries across all targets.
-   Create `docs/` or `.claude/rules/` dirs under `<scope>` if needed.
+1. Apply the finalized plan — write/edit/remove entries across all targets,
+   including creating a new `docs/<topic>.md` for any topic that graduates
+   per the shared reference. Create `docs/` or `.claude/rules/` dirs under
+   `<scope>` if needed.
 2. Merge into existing sections by topic, not chronologically.
-3. **Regenerate `<scope>/.cotesy/index.md`** (topic → file → one-liner table)
-   to reflect the post-update doc set. Include a row per doc target that
-   exists (`CLAUDE.md`, `docs/ARCHITECTURE.md`, each `.claude/rules/` file)
-   plus any other markdown file sitting directly in scope root that isn't
-   already covered — same convention `cotesy:init` uses.
+3. **Regenerate `<scope>/.cotesy/index.md`** per the shared reference's Index
+   generation convention, to reflect the post-update doc set.
 4. **Truncate `<scope>/.cotesy/wal.md`** back to just the schema-header
    comment — every entry you drained is now reflected in docs or the index.
 5. **Do not run `git commit` or `git add`.** `Bash(git *)` is for read-only

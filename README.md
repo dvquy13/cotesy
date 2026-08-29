@@ -7,9 +7,10 @@ Decouples **capture** from **curation** for project knowledge bases.
   doc mutation, no thinking about placement — just log it.
 - `cotesy:sync` — periodic curation. Spawns a fresh, memory-less agent that
   drains the WAL, dedupes and audits it against a scope's existing docs
-  (`docs/ARCHITECTURE.md`, `CLAUDE.md`, `.claude/rules/`), applies the
-  updates, regenerates `.cotesy/index.md`, and clears the WAL. Never
-  auto-commits — changes are left unstaged for human review via `git diff`.
+  (`docs/ARCHITECTURE.md` and its per-topic `docs/<topic>.md` files,
+  `CLAUDE.md`, `.claude/rules/`), applies the updates, regenerates
+  `.cotesy/index.md`, and clears the WAL. Never auto-commits — changes are
+  left unstaged for human review via `git diff`.
 - `cotesy:init [path]` — scaffold a `.cotesy/` scope (default: cwd), seeding
   `docs/ARCHITECTURE.md` if absent.
 - `cotesy:retire <scope> --to <ancestor>` — one-time distillation: fold a
@@ -25,6 +26,16 @@ A "scope" is any folder with its own `.cotesy/` — not just repo root. Use
 an ancestor's WAL, tagged with a `**Source:**` provenance line.
 
 Everything is plain committed markdown — no database, no hidden state.
+
+## Upgrading
+
+Updating cotesy (e.g. picking up a new `plugin/shared/placement-scope.md`
+routing rule) never touches a downstream repo's docs by itself — there's no
+hook, it's pull-only. `cotesy:sync` only re-audits existing docs when it has
+WAL entries to drain, so a scope with an empty WAL won't notice a rules
+change at all. **After upgrading, run `cotesy:tidy` on each `.cotesy/` scope**
+to re-audit its existing docs against the current rules and relocate
+anything that's now misplaced.
 
 ## Install (local dev)
 

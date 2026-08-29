@@ -3,7 +3,8 @@ name: sync
 description: >
   Drain a cotesy scope's WAL into its docs by spawning a fresh curator agent.
   Use when the user says "cotesy sync", "curate cotesy", or wants pending
-  cotesy findings folded into docs/ARCHITECTURE.md, CLAUDE.md, or rules.
+  cotesy findings folded into docs/ARCHITECTURE.md, a docs/<topic>.md,
+  CLAUDE.md, or rules.
 allowed-tools: Read, Agent, Bash(git *)
 argument-hint: "[path]"
 ---

@@ -32,10 +32,13 @@ only ever `REMOVE`, merge (`UPDATE`), or `RELOCATE` — never `ADD`.
 
 1. Read the shared reference (path given in your invocation).
 2. Read `<scope>/docs/ARCHITECTURE.md` if it exists.
-3. Read `<scope>/CLAUDE.md` if it exists.
-4. List `<scope>/.claude/rules/` and read existing rule files, if any.
-5. Read `<scope>/.cotesy/index.md` if it exists.
-6. If `git status` on `<scope>`'s doc targets shows unrelated dirty changes
+3. List `<scope>/docs/` and read every other `docs/<topic>.md` file present.
+4. Read `<scope>/CLAUDE.md` if it exists.
+5. List `<scope>/.claude/rules/` and read existing rule files, if any.
+6. Read `<scope>/.cotesy/index.md` if it exists.
+7. Read `<scope>/README.md` if it exists, per the shared reference's "Read
+   README.md before writing" rule.
+8. If `git status` on `<scope>`'s doc targets shows unrelated dirty changes
    (not from this run), note it — you may still proceed since you never
    commit, but flag it in your summary.
 
@@ -43,9 +46,12 @@ only ever `REMOVE`, merge (`UPDATE`), or `RELOCATE` — never `ADD`.
 
 Apply the shared reference's Audit Criteria & Tags to every entry across
 every target read in Phase 1 — including duplicates *across* targets (e.g.
-the same convention stated in both `CLAUDE.md` and `docs/ARCHITECTURE.md`)
-and misplacement against the shared reference's Placement Scope, not just
-staleness within a single file.
+the same convention stated in both `CLAUDE.md` and `docs/ARCHITECTURE.md`,
+or between a doc and `README.md`), misplacement against the shared
+reference's Doc Targets (e.g. a topic-scoped decision sitting in
+`docs/ARCHITECTURE.md` instead of a `docs/<topic>.md`, or CLAUDE.md content
+that fails the frequency test), and topics that should have graduated per
+Topic graduation but haven't — not just staleness within a single file.
 
 ## Phase 3: Plan + dedup
 
@@ -60,11 +66,13 @@ If everything audits to `KEEP`, the plan is empty.
    audited clean, make no edits.
 2. Otherwise apply the finalized plan — edit/remove/relocate entries across
    all targets. Do not create new sections or files beyond what relocation
-   requires (e.g. moving a misplaced entry into an existing
-   `.claude/rules/<topic>.md`).
+   requires — that includes creating `docs/<topic>.md` when relocating
+   entries to trigger a topic graduation per the shared reference, or moving
+   a misplaced entry into an existing `.claude/rules/<topic>.md`.
 3. Merge into existing sections by topic, not chronologically.
-4. Regenerate `<scope>/.cotesy/index.md` if the doc set's topics changed as
-   a result of the tidy pass.
+4. Regenerate `<scope>/.cotesy/index.md` per the shared reference's Index
+   generation convention if the doc set's topics changed as a result of the
+   tidy pass.
 5. **Never touch `<scope>/.cotesy/wal.md`.**
 6. **Do not run `git commit` or `git add`.** `Bash(git *)` is for read-only
    checks only. Leave all edits unstaged for human review.
