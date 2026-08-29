@@ -1,0 +1,10 @@
+{
+  "name": "cotesy",
+  "version": "0.1.0",
+  "description": "Decoupled capture (WAL) and curation (fresh-agent sync) for scoped project knowledge bases",
+  "skills": [
+    "./skills/init",
+    "./skills/append",
+    "./skills/sync"
+  ]
+}

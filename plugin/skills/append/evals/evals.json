@@ -1,0 +1,41 @@
+{
+  "skill_name": "append",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "cotesy append: we decided to use SQLite for the WAL storage because it's already a dependency",
+      "expected_output": "Resolves the nearest ancestor .cotesy/ scope from cwd and appends a decision entry to its wal.md, with no Source line since --to wasn't used",
+      "files": [".cotesy/wal.md"],
+      "expectations": [
+        "Appends a new level-2 heading entry to the nearest ancestor .cotesy/wal.md",
+        "Entry type is 'decision'",
+        "Entry includes a **Summary:** and **Detail:** line",
+        "Entry does NOT include a **Source:** line",
+        "Existing WAL content is preserved, not overwritten"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "cotesy append --to ../.. : found a gotcha, the parent config also needs this env var set",
+      "expected_output": "Targets the given ancestor scope's wal.md directly (must already contain .cotesy/), appends a gotcha entry with a **Source:** line pointing back at the originating (cwd's nearest) scope",
+      "files": ["../../.cotesy/wal.md", ".cotesy/wal.md"],
+      "expectations": [
+        "Appends to the --to target scope's wal.md, not the nearest ancestor from cwd",
+        "Entry type is 'gotcha'",
+        "Entry includes a **Source:** line identifying the originating scope",
+        "Does not modify the originating scope's own wal.md"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "cotesy append: noticed the build script has a bug in a repo with no .cotesy/ anywhere in its ancestry",
+      "expected_output": "Errors clearly that no .cotesy/ scope was found and suggests running cotesy:init, without creating or writing any files",
+      "files": [],
+      "expectations": [
+        "Does not create any .cotesy/ directory or wal.md file",
+        "Error message mentions no .cotesy/ scope was found",
+        "Error message suggests running cotesy:init"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "skill_name": "init",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "cotesy init in this fresh empty repo",
+      "expected_output": "Creates .cotesy/wal.md with the empty schema header, seeds docs/ARCHITECTURE.md from the skeleton since none existed, and generates .cotesy/index.md pointing at it",
+      "files": [],
+      "expectations": [
+        "Creates <scope>/.cotesy/wal.md containing only the schema header comment, no entries",
+        "Creates docs/ARCHITECTURE.md with the Structure/Key Concepts/Entry Points/Data Flow/Decisions/Gotchas/Dependencies skeleton",
+        "Creates .cotesy/index.md with a table row pointing at docs/ARCHITECTURE.md",
+        "Does not invent architectural content not observable from the scope"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "cotesy init on a repo that already has docs/ARCHITECTURE.md and CLAUDE.md",
+      "expected_output": "Builds .cotesy/index.md from the existing docs without modifying or clobbering them",
+      "files": ["docs/ARCHITECTURE.md", "CLAUDE.md"],
+      "expectations": [
+        "Does not overwrite or modify the existing docs/ARCHITECTURE.md content",
+        "Does not overwrite or modify the existing CLAUDE.md content",
+        "Creates .cotesy/index.md with rows for both docs/ARCHITECTURE.md and CLAUDE.md",
+        "Creates .cotesy/wal.md with only the schema header, no entries"
+      ]
+    }
+  ]
+}

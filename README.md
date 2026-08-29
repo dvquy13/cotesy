@@ -1,0 +1,38 @@
+# cotesy
+
+Decouples **capture** from **curation** for project knowledge bases.
+
+- `cotesy:append` — cheap, inline, write-time. Appends a finding (decision,
+  bug, convention, gotcha) to a scope's `.cotesy/wal.md` write-ahead log. No
+  doc mutation, no thinking about placement — just log it.
+- `cotesy:sync` — periodic curation. Spawns a fresh, memory-less agent that
+  drains the WAL, dedupes and audits it against a scope's existing docs
+  (`docs/ARCHITECTURE.md`, `CLAUDE.md`, `.claude/rules/`), applies the
+  updates, regenerates `.cotesy/index.md`, and clears the WAL. Never
+  auto-commits — changes are left unstaged for human review via `git diff`.
+- `cotesy:init [path]` — scaffold a `.cotesy/` scope (default: cwd), seeding
+  `docs/ARCHITECTURE.md` if absent.
+
+A "scope" is any folder with its own `.cotesy/` — not just repo root. Use
+`cotesy:append --to <ancestor>` to promote a finding from a nested scope up to
+an ancestor's WAL, tagged with a `**Source:**` provenance line.
+
+Everything is plain committed markdown — no database, no hidden state.
+
+## Install (local dev)
+
+Registered via `~/.claude/settings.json`:
+```json
+"extraKnownMarketplaces": { "cotesy": { "source": { "source": "directory", "path": "/Users/dvq/frostmourne/cotesy" } } },
+"enabledPlugins": { "cotesy@cotesy": true }
+```
+
+## Layout
+
+```
+.claude-plugin/marketplace.json
+plugin/
+  .claude-plugin/plugin.json
+  agents/curator.md
+  skills/{init,append,sync}/SKILL.md (+ evals/evals.json)
+```

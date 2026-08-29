@@ -1,0 +1,30 @@
+{
+  "skill_name": "sync",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "cotesy sync",
+      "expected_output": "Resolves the nearest .cotesy/ scope, sees the WAL has a mix of decision/bug/convention/gotcha entries, spawns the cotesy-curator agent with only the scope path, then surfaces its summary and reminds the user changes are unstaged",
+      "files": [".cotesy/wal.md", "docs/ARCHITECTURE.md", "CLAUDE.md"],
+      "expectations": [
+        "Reads .cotesy/wal.md before deciding whether to spawn the agent",
+        "Spawns the cotesy-curator agent (subagent_type or equivalent) passing only the scope path, not summarized findings",
+        "Does not itself edit docs/ARCHITECTURE.md, CLAUDE.md, or .claude/rules/ files directly",
+        "Final response mentions the changes are unstaged and should be reviewed with git diff",
+        "Does not run git commit or git add"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "cotesy sync",
+      "expected_output": "Reads the WAL, sees it only contains the schema-header comment with no entries, reports nothing to sync, and does not spawn the curator agent",
+      "files": [".cotesy/wal.md"],
+      "expectations": [
+        "Reads .cotesy/wal.md and determines it has no '## ' entries",
+        "Reports to the user that there is nothing to sync",
+        "Does NOT spawn the cotesy-curator agent",
+        "Does not modify any files"
+      ]
+    }
+  ]
+}
