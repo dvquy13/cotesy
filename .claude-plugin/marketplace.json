@@ -8,8 +8,8 @@
       "name": "cotesy",
       "source": "./plugin",
       "description": "Decoupled capture (WAL) and curation (fresh-agent sync) for scoped project knowledge bases",
-      "version": "0.1.1"
+      "version": "0.2.0"
     }
   ],
-  "version": "0.1.1"
+  "version": "0.2.0"
 }
