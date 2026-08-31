@@ -27,48 +27,27 @@ an ancestor's WAL, tagged with a `**Source:**` provenance line.
 
 Everything is plain committed markdown — no database, no hidden state.
 
+## Install
+
+In Claude Code:
+
+```
+/plugin marketplace add dvquy13/cotesy
+/plugin install cotesy@cotesy
+```
+
+Then, in any project, run `cotesy:init` to scaffold its first `.cotesy/`
+scope.
+
 ## Upgrading
 
-Updating cotesy (e.g. picking up a new `plugin/shared/placement-scope.md`
-routing rule) never touches a downstream repo's docs by itself — there's no
-hook, it's pull-only. `cotesy:sync` only re-audits existing docs when it has
-WAL entries to drain, so a scope with an empty WAL won't notice a rules
-change at all. **After upgrading, run `cotesy:tidy` on each `.cotesy/` scope**
-to re-audit its existing docs against the current rules and relocate
-anything that's now misplaced.
+Update the plugin with `/plugin marketplace update cotesy` (or your usual
+plugin-update flow). This never touches a downstream repo's docs by
+itself — there's no hook, it's pull-only. `cotesy:sync` only re-audits
+existing docs when it has WAL entries to drain, so a scope with an empty
+WAL won't notice a rules change at all. **After upgrading, run
+`cotesy:tidy` on each `.cotesy/` scope** to re-audit its existing docs
+against the current rules and relocate anything that's now misplaced.
 
-## Install (local dev)
-
-Registered via `~/.claude/settings.json`:
-```json
-"extraKnownMarketplaces": { "cotesy": { "source": { "source": "directory", "path": "/Users/dvq/frostmourne/cotesy" } } },
-"enabledPlugins": { "cotesy@cotesy": true }
-```
-
-## Releasing
-
-Versioning and changelog generation are automated with
-[release-please](https://github.com/googleapis/release-please). Commits to
-`main` must use [Conventional Commits](https://www.conventionalcommits.org/)
-prefixes (`feat:`, `fix:`, `feat!:` / `BREAKING CHANGE:` footer, `chore:`,
-`docs:`, `refactor:`, ...) — these determine the next semver bump.
-
-On every push to `main`, the `release-please` workflow opens or updates a
-standing "release PR" containing the version bump (applied in lockstep to
-`plugin/.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`)
-and the `CHANGELOG.md` entry. Merging that PR tags the release (`vX.Y.Z`)
-and publishes a GitHub Release — no manual version editing or changelog
-writing required. See `release-please-config.json`.
-
-## Layout
-
-```
-.claude-plugin/marketplace.json
-plugin/
-  .claude-plugin/plugin.json
-  agents/curator.md
-  agents/retirer.md
-  agents/groundskeeper.md
-  shared/placement-scope.md
-  skills/{init,append,sync,retire,tidy}/SKILL.md (+ evals/evals.json)
-```
+See [CONTRIBUTING.md](CONTRIBUTING.md) for local dev setup, releasing, and
+repo layout.

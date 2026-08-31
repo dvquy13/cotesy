@@ -8,4 +8,5 @@
 | Curation | docs/curation.md | `cotesy:sync`/`cotesy-curator` behavior: fresh-agent reproducibility and never-auto-commit rule. |
 | Release process | docs/release.md | Why release-please over semantic-release, plus config/permissions gotchas. |
 | Project instructions | .claude/CLAUDE.md | References README.md as the project's Claude Code instructions. |
-| Overview & release process | README.md | Plugin overview, install instructions, layout, and release-please-based release harness. |
+| Overview | README.md | User-facing plugin overview, commands, and install instructions. |
+| Contributing | CONTRIBUTING.md | Local dev install, release-please internals, and repo layout tree — maintainer-only content. |
